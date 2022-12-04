@@ -29,14 +29,27 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Game-Over"
-                android:textSize="60sp"
-                android:layout_marginTop="30dp">
+                android:textColor="@color/white"
+                android:textSize="70sp"
+                android:layout_marginTop="40dp">
 
             </com.google.android.material.textview.MaterialTextView>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true">
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/end_BTN_backtomain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="back to main"
+                android:textSize="35sp"
+                android:backgroundTint="#A52A2A"
+                android:layout_marginTop="130dp">
 
-
-
+            </com.google.android.material.button.MaterialButton>
         </LinearLayout>
 
     </RelativeLayout>
