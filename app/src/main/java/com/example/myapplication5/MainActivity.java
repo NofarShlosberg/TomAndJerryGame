@@ -12,15 +12,12 @@ import com.google.android.material.imageview.ShapeableImageView;
 
 public class MainActivity extends AppCompatActivity {
     private MaterialButton startgamebutton;
-    private ShapeableImageView background;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         startgamebutton = findViewById(R.id.startgamebutton);
-        background = findViewById(R.id.background);
         MediaPlayer mainmusic = MediaPlayer.create(MainActivity.this, R.raw.mainmusic);
         mainmusic.start();
 
