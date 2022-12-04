@@ -11,7 +11,11 @@ public class GameActivity extends AppCompatActivity{
     private MaterialButton game_BTN_left;
     private MaterialButton game_BTN_right;
     private ShapeableImageView[] game_IMG_hearts;
-    private void findViews() {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_game);
 
         game_BTN_left = findViewById(R.id.game_BTN_left);
         game_BTN_right = findViewById(R.id.game_BTN_right);
@@ -21,11 +25,6 @@ public class GameActivity extends AppCompatActivity{
                 findViewById(R.id.game_IMG_heart2),
                 findViewById(R.id.game_IMG_heart1),
         };
-    }
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game);
     }
 
 }
