@@ -96,8 +96,8 @@
             android:layout_marginBottom="120dp">
 
 
-            <ImageView
-                android:id="@+id/main_IMG_jerryPos0"
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/game_IMG_jerryPos0"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -105,8 +105,8 @@
                 app:srcCompat="@drawable/ic_jerry"
                 android:scaleType="centerCrop" />
 
-            <ImageView
-                android:id="@+id/main_IMG_jerryPos1"
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/game_IMG_jerryPos1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -114,8 +114,8 @@
                 app:srcCompat="@drawable/ic_jerry"
                 android:scaleType="centerCrop" />
 
-            <ImageView
-                android:id="@+id/main_IMG_jerryPos2"
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/game_IMG_jerryPos2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -123,8 +123,8 @@
                 app:srcCompat="@drawable/ic_jerry"
                 android:scaleType="centerCrop" />
 
-            <ImageView
-                android:id="@+id/main_IMG_jerryPos3"
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/game_IMG_jerryPos3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -132,8 +132,8 @@
                 app:srcCompat="@drawable/ic_jerry"
                 android:scaleType="centerCrop" />
 
-            <ImageView
-                android:id="@+id/main_IMG_jerryPos4"
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/game_IMG_jerryPos4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
