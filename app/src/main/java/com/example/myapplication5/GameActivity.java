@@ -38,6 +38,7 @@ public class GameActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 moveJerry("right");
+                showRealJerry();
             }
 
         });
@@ -116,7 +117,15 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void showRealJerry() {
-
+        int currentPos = jerry.getPos();
+        for(int i = 0; i < game_IMG_jerryPos.length; i++) {
+            if (currentPos == i) {
+                game_IMG_jerryPos[i].setVisibility(View.VISIBLE);
+            }
+            else {
+                game_IMG_jerryPos[i].setVisibility(View.INVISIBLE);
+            }
+        }
     }
 
 }
