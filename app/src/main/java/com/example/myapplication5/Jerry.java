@@ -26,6 +26,6 @@ public class Jerry {
     public void hitTom() {
         --numOfLife;
     }
-    
+
 }
 
