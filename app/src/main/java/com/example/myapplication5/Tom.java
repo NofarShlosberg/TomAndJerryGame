@@ -21,7 +21,7 @@ public class Tom {
             return COL;
         }
 
-        public void setRowNextLevel() {
+        public void setNextRow() {
             row++;
         }
 
