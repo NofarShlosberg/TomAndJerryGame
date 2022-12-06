@@ -23,7 +23,7 @@ public class Jerry {
         this.pos = pos;
     }
 
-    public void hitTom() {
+    public void hitFromTom() {
         --numOfLife;
     }
 
