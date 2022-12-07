@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".EndGameActivity">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/end_background"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:src="@drawable/end_game_background">
+
+            </com.google.android.material.imageview.ShapeableImageView>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true">
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/lbl_game_over"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Game-Over"
+                android:textColor="@color/white"
+                android:textSize="75sp"
+                android:layout_marginTop="45dp">
+
+            </com.google.android.material.textview.MaterialTextView>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/end_BTN_backtomain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Back To MAIN"
+                android:textAllCaps="false"
+                android:textSize="40sp"
+                android:layout_gravity="center"
+                android:backgroundTint="#A52A2A"
+                android:layout_marginTop="180dp">
+            </com.google.android.material.button.MaterialButton>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/end_BTN_restart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAllCaps="false"
+                android:layout_marginTop="10dp"
+                android:text="Restart Game"
+                android:textSize="37sp"
+                android:layout_gravity="center"
+                android:backgroundTint="#A52A2A">
+
+
+            </com.google.android.material.button.MaterialButton>
+        </LinearLayout>
+
+    </RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
