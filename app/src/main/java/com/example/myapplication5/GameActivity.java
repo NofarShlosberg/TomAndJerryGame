@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.VibrationEffect;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -233,13 +232,14 @@ public class GameActivity extends AppCompatActivity {
     private void ShowRealTom(Tom thisTom) {
         int rowTom = thisTom.getRow();
         int colTom = thisTom.getCOL();
-        if (rowTom != 0)
-            game_IMG_tomPos[rowTom-1][colTom].setVisibility(View.INVISIBLE);
 
         if (rowTom < TOM_MATRIX_ROW) {
             game_IMG_tomPos[rowTom][colTom].setVisibility(View.VISIBLE);
             game_IMG_tomPos[rowTom][colTom].setImageResource(R.drawable.ic_tom);
         }
+
+        if (rowTom != 0)
+            game_IMG_tomPos[rowTom-1][colTom].setVisibility(View.INVISIBLE);
 
     }
 
