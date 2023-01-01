@@ -55,10 +55,29 @@
                 app:srcCompat="@drawable/ic_heart"
                 android:scaleType="fitCenter"/>
         </androidx.appcompat.widget.LinearLayoutCompat>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="right">
+
+            <TextView
+                android:id="@+id/game_TXT_score"
+                android:textAlignment="textEnd"
+                android:layout_width="110dp"
+                android:layout_height="match_parent"
+                android:layout_marginVertical="15dp"
+                android:maxLines="1"
+                android:textColor="#C85A54"
+                android:textSize="40sp"
+                android:text="000"
+
+                />
+        </LinearLayout>
 
         <!-- Arrows Layout -->
         <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginBottom="15dp"
@@ -74,19 +93,13 @@
                 android:textAllCaps="false"
                 android:text="LEFT"
                 android:backgroundTint="#000000"
-                android:textSize="40sp">
+                android:textSize="30sp">
 
             </com.google.android.material.button.MaterialButton>
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="15dp"
-            android:layout_marginHorizontal="16dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true">
+            <View
+                android:layout_width="80dp"
+                android:layout_height="match_parent">
+            </View>
 
             <!-- Right Arrow -->
             <com.google.android.material.button.MaterialButton
@@ -97,18 +110,18 @@
                 android:textAllCaps="false"
                 android:text="RIGHT"
                 android:backgroundTint="@color/black"
-                android:textSize="40sp"/>
+                android:textSize="30sp"/>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
             android:orientation="horizontal"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="120dp">
+
 
 
             <com.google.android.material.imageview.ShapeableImageView
@@ -156,6 +169,7 @@
                 app:srcCompat="@drawable/ic_jerry"
                 android:scaleType="centerCrop" />
 
+
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <!-- Tom matrix -->
@@ -178,49 +192,43 @@
                     android:id="@+id/game_IMG_TomPos00"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tom"
-                    android:layout_weight="1"  />
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/ic_tom"/>
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/game_IMG_TomPos10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tom"
                     android:layout_weight="1" />
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/game_IMG_TomPos20"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tom"
                     android:layout_weight="1" />
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/game_IMG_TomPos30"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tom"
                     android:layout_weight="1"/>
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/game_IMG_TomPos40"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tom"
                     android:layout_weight="1" />
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/game_IMG_TomPos50"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tom"
                     android:layout_weight="1" />
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/game_IMG_TomPos60"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tom"
                     android:layout_weight="1" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -230,55 +238,50 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                >
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/game_IMG_TomPos01"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tom"
-                    android:layout_weight="1"  />
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/ic_tom"/>
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/game_IMG_TomPos11"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tom"
                     android:layout_weight="1" />
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/game_IMG_TomPos21"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tom"
                     android:layout_weight="1" />
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/game_IMG_TomPos31"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tom"
                     android:layout_weight="1"/>
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/game_IMG_TomPos41"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tom"
                     android:layout_weight="1" />
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/game_IMG_TomPos51"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tom"
                     android:layout_weight="1" />
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/game_IMG_TomPos61"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tom"
                     android:layout_weight="1" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -288,55 +291,50 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                    >
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/game_IMG_TomPos02"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tom"
-                    android:layout_weight="1"  />
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/ic_tom"/>
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/game_IMG_TomPos12"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tom"
                     android:layout_weight="1" />
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/game_IMG_TomPos22"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tom"
                     android:layout_weight="1" />
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/game_IMG_TomPos32"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tom"
                     android:layout_weight="1"/>
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/game_IMG_TomPos42"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tom"
                     android:layout_weight="1" />
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/game_IMG_TomPos52"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tom"
                     android:layout_weight="1" />
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/game_IMG_TomPos62"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tom"
                     android:layout_weight="1" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -352,49 +350,43 @@
                     android:id="@+id/game_IMG_TomPos03"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tom"
-                    android:layout_weight="1"  />
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/ic_tom"/>
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/game_IMG_TomPos13"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tom"
                     android:layout_weight="1" />
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/game_IMG_TomPos23"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tom"
                     android:layout_weight="1" />
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/game_IMG_TomPos33"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tom"
                     android:layout_weight="1"/>
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/game_IMG_TomPos43"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tom"
                     android:layout_weight="1" />
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/game_IMG_TomPos53"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tom"
                     android:layout_weight="1" />
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/game_IMG_TomPos63"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tom"
                     android:layout_weight="1" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -410,49 +402,43 @@
                     android:id="@+id/game_IMG_TomPos04"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tom"
-                    android:layout_weight="1"  />
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/ic_tom"/>
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/game_IMG_TomPos14"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tom"
                     android:layout_weight="1" />
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/game_IMG_TomPos24"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tom"
                     android:layout_weight="1" />
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/game_IMG_TomPos34"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tom"
                     android:layout_weight="1"/>
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/game_IMG_TomPos44"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tom"
                     android:layout_weight="1" />
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/game_IMG_TomPos54"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tom"
                     android:layout_weight="1" />
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/game_IMG_TomPos64"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_tom"
                     android:layout_weight="1" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
