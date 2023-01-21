@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ScoreActivity"
+    android:orientation="vertical"
+    android:background="@drawable/end_game_background">
+
+    <FrameLayout
+        android:id="@+id/score_FRAME_topTen"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="20dp"
+        android:layout_margin="10dp"
+        android:elevation="15dp"
+        android:scrollbars="horizontal"
+        />
+
+    <FrameLayout
+        android:id="@+id/score_FRAME_map"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="8dp"
+        android:elevation="15dp"
+        />
+</LinearLayout>

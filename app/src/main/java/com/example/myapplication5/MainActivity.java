@@ -1,8 +1,11 @@
 package com.example.myapplication5;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.text.Editable;
@@ -27,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         findViews();
         playMusic();
         activateButtons();
+        permissionGPS();
 
     }
 
@@ -68,6 +72,13 @@ public class MainActivity extends AppCompatActivity {
             myintent.putExtra(GameActivity.MODE, main_BTN_mode.getText());
             startActivity(myintent);
         }
+    }
+
+    private void permissionGPS(){
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
+
     }
 }
 

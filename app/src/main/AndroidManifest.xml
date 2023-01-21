@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,6 +17,9 @@
         android:supportsRtl="false"
         android:theme="@style/Theme.MyApplication5"
         tools:targetApi="31">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDFhEliITIgew-3lxDDtoguphvpy3pHn1E" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -20,15 +28,20 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity android:name=".GameActivity"></activity>
-        <activity android:name=".EndGameActivity"></activity>
+        <activity android:name=".EndGameActivity" android:exported="true">
+
+
+        </activity>
+        <activity android:name=".ScoreActivity"></activity>
     </application>
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
-    <uses-permission android:name="android.permission.VIBRATE"/>
+
+
+
+
 
 </manifest>

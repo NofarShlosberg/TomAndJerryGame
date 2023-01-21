@@ -20,6 +20,9 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Random;
+
+import im.delight.android.location.SimpleLocation;
+
 public class GameActivity extends AppCompatActivity {
 
     public static final String LEVEL="LEVEL";
@@ -27,11 +30,11 @@ public class GameActivity extends AppCompatActivity {
     public static final String NAME="NAME";
     private static final int OBS_MATRIX_ROW = 7;
     private static final int OBS_MATRIX_COL = 5;
-    private int delayToChoose;
     private static final int DELAY_EASY = 1000;
     private static final int DELAY_HARD = 600;
     private static final String SP_KEY_JERRY = "SP_KEY_JERRY";
     private static final String SP_KEY_OBS = "SP_KEY_OBS";
+
     private MaterialButton game_BTN_left;
     private MaterialButton game_BTN_right;
     private ShapeableImageView game_IMG_background;
@@ -43,8 +46,8 @@ public class GameActivity extends AppCompatActivity {
     private Thread thread ;
     private Intent lastIntent;
     private TiltDetector tiltDetector;
-
-
+    private int delayToChoose;
+    private SimpleLocation simpleLoc;
     Handler handler = new Handler(Looper.myLooper());
     private Runnable runnable = new Runnable() {
     @Override
@@ -98,6 +101,7 @@ public class GameActivity extends AppCompatActivity {
         }
         this.thread = null ;
 
+        simpleLoc.endUpdates();
     }
 
     @Override
@@ -105,6 +109,8 @@ public class GameActivity extends AppCompatActivity {
         super.onResume();
         this.thread = new Thread(runnable);
         this.thread.run();
+        simpleLoc = initLocation();
+        simpleLoc.beginUpdates();
 
         String jerryAsJsonStringFromSP = MySP3.getInstance().getString(SP_KEY_JERRY,"");
         String obsAsJsonStringFromSP = MySP3.getInstance().getString(SP_KEY_OBS,"");
@@ -165,6 +171,27 @@ public class GameActivity extends AppCompatActivity {
 
     }
 
+    private void initViews() {
+
+        // set life IMG
+        for (int i = 0; i < game_IMG_hearts.length; i++) {
+            Glide
+                    .with(this)
+                    .load(R.drawable.ic_heart)
+                    .into(game_IMG_hearts[i]);
+        }
+
+        // set Jerry IMG
+        for (int i = 0; i < game_IMG_jerryPos.length; i++) {
+            Glide
+                    .with(this)
+                    .load(R.drawable.ic_jerry)
+                    .centerInside()
+                    .into(game_IMG_jerryPos[i]);
+        }
+
+    }
+
     private void checkMode(){
         String mode = lastIntent.getExtras().getString(MODE);
         if(mode.equalsIgnoreCase("sensors")){
@@ -189,42 +216,7 @@ public class GameActivity extends AppCompatActivity {
 
     }
 
-    private TiltDetector.CallBack_moves callBack_moves = new TiltDetector.CallBack_moves() {
-
-        @Override
-        public void moveLeft() {
-            moveJerry("left");
-            showRealJerry();
-        }
-
-        @Override
-        public void moveRight() {
-            moveJerry("right");
-            showRealJerry();
-        }
-    };
-
-    private void initViews() {
-
-        // set life IMG
-        for (int i = 0; i < game_IMG_hearts.length; i++) {
-            Glide
-                    .with(this)
-                    .load(R.drawable.ic_heart)
-                    .into(game_IMG_hearts[i]);
-        }
-
-        // set Jerry IMG
-        for (int i = 0; i < game_IMG_jerryPos.length; i++) {
-            Glide
-                    .with(this)
-                    .load(R.drawable.ic_jerry)
-                    .centerInside()
-                    .into(game_IMG_jerryPos[i]);
-        }
-
-    }
-    private void buttons(){
+    private void buttons(){ //Activate Buttons
         game_BTN_left.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -241,6 +233,22 @@ public class GameActivity extends AppCompatActivity {
 
         });
     }
+
+    private TiltDetector.CallBack_moves callBack_moves = new TiltDetector.CallBack_moves() { //Activate Seneors
+        @Override
+        public void moveLeft() {
+            moveJerry("left");
+            showRealJerry();
+        }
+
+        @Override
+        public void moveRight() {
+            moveJerry("right");
+            showRealJerry();
+        }
+    };
+
+
 
     private void initVisibility() {
         // set Jerry default Visibility
@@ -290,6 +298,7 @@ public class GameActivity extends AppCompatActivity {
             }
         }
     }
+
     private void createObs() {
         for (Obstacle obs :
                 allObstacle) {
@@ -328,6 +337,23 @@ public class GameActivity extends AppCompatActivity {
             }
         }
     }
+
+    private void checkHit(Obstacle obs) {
+        if (obs.getCOL() == jerry.getPos() ) {  // obs catch Jerry
+            if (obs instanceof Tom) {
+                jerry.hitFromTom();
+                toVibrate();
+                updateHearts();
+            }
+            if( obs instanceof Cheese){
+                jerry.setGameScore(jerry.getGameScore()+((Cheese) obs).getScore());
+            }
+        }
+    }
+    private void updateHearts() {
+        game_IMG_hearts[jerry.getNumOfLife()].setVisibility(View.INVISIBLE);
+    }
+
     private void UpdateUi(){
 
         for(int i= 0; i <OBS_MATRIX_ROW; i++){
@@ -351,17 +377,28 @@ public class GameActivity extends AppCompatActivity {
 
     }
 
-    private void checkHit(Obstacle obs) {
-        if (obs.getCOL() == jerry.getPos() ) {  // obs catch Jerry
-            if (obs instanceof Tom) {
-                jerry.hitFromTom();
-                toVibrate();
-                updateHearts();
-            }
-            if( obs instanceof Cheese){
-                jerry.setGameScore(jerry.getGameScore()+((Cheese) obs).getScore());
-            }
+    private SimpleLocation initLocation(){
+        SimpleLocation location = new SimpleLocation(this);
+        if (!location.hasLocationEnabled()) {
+            SimpleLocation.openSettings(this);
         }
+        return location;
+
+    }
+
+    private void gameOver() {
+        Intent lastIntent = getIntent();
+        String playerName = lastIntent.getStringExtra(NAME);
+        Double lan = simpleLoc.getLongitude();
+        Double lat = simpleLoc.getLatitude();
+
+        ArrayList<Player> topPlayers = (ArrayList<Player>) MySP3.getInstance().getAllPlayers();
+        topPlayers.add(new Player(playerName, jerry.getGameScore(),lan,lat));
+        MySP3.getInstance().setAllPlayers(topPlayers);
+//        Log.d( "getAllPlayers: ", MySP3.getInstance().getAllPlayers().toString());
+        Intent myIntent = new Intent(this,EndGameActivity.class);
+        startActivity(myIntent);
+        finish();
     }
 
     private void toVibrate() {
@@ -375,13 +412,6 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    private void updateHearts() {
-        game_IMG_hearts[jerry.getNumOfLife()].setVisibility(View.INVISIBLE);
-    }
-    private void gameOver() {
-        Intent myintent = new Intent(this,EndGameActivity.class);
-        startActivity(myintent);
-        finish();
-    }
+
 
 }
