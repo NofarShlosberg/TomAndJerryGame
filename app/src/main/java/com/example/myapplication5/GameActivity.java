@@ -4,92 +4,125 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.VibrationEffect;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.os.Vibrator;
+import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.imageview.ShapeableImageView;
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.Random;
+
+import im.delight.android.location.SimpleLocation;
 
 public class GameActivity extends AppCompatActivity {
 
-    private static final int TOM_MATRIX_ROW = 7;
-    private static final int TOM_MATRIX_COL = 5;
-    private static final long DELAY = 1000;
+    public static final String LEVEL="LEVEL";
+    public static final String MODE="MODE";
+    public static final String NAME="NAME";
+    private static final int OBS_MATRIX_ROW = 7;
+    private static final int OBS_MATRIX_COL = 5;
+    private static final int DELAY_EASY = 1000;
+    private static final int DELAY_HARD = 600;
+    private static final String SP_KEY_JERRY = "SP_KEY_JERRY";
+    private static final String SP_KEY_OBS = "SP_KEY_OBS";
+
     private MaterialButton game_BTN_left;
     private MaterialButton game_BTN_right;
     private ShapeableImageView game_IMG_background;
     private ShapeableImageView[] game_IMG_hearts;
     private ShapeableImageView[] game_IMG_jerryPos;
-    private ShapeableImageView[][] game_IMG_tomPos;
-    private Jerry jerry;
-    private ArrayList<Tom> allToms;
-    private Timer timer;
-    private void startTimer() {
-        timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                            createTom();
-                            dropTom();
-                    }
-                });
-            }
-        }, DELAY, DELAY);
+    private ShapeableImageView[][] game_IMG_obsPos;
+    private Jerry jerry = new Jerry();
+    private ArrayList<Obstacle> allObstacle = new ArrayList<>() ;
+    private Thread thread ;
+    private Intent lastIntent;
+    private TiltDetector tiltDetector;
+    private int delayToChoose;
+    private SimpleLocation simpleLoc;
+    Handler handler = new Handler(Looper.myLooper());
+    private Runnable runnable = new Runnable() {
+    @Override
+    public void run() {
+        handler.postDelayed(this,delayToChoose);
+        if (jerry.getNumOfLife() == 0) {
+            return;
+        }
+        createObs();
+        UpdateUi();
+        dropObs();
     }
-
-
-    private static final String TAG = "jerry pos";
+};
+    private static final String TAG = "jerry pos"; // check
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         findViews();
         initViews();
+        buttons();
+        MySP3.init(this);
+        lastIntent = getIntent();
+        tiltDetector = new TiltDetector(this, callBack_moves);
+        checkLevel();
+        checkMode();
+        String jerryJson = new Gson().toJson(jerry);
+        String obsJson = new Gson().toJson(allObstacle);
+        MySP3.getInstance().putString(SP_KEY_JERRY, jerryJson);
+        MySP3.getInstance().putString(SP_KEY_OBS, obsJson);
 
-        game_BTN_left.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                moveJerry("left");
-                showRealJerry();
-            }
-        });
-        game_BTN_right.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                moveJerry("right");
-                showRealJerry();
-            }
-
-        });
     }
+
     @Override
     protected void onStart() {
         super.onStart();
-        startTimer();
         initVisibility();
-        jerry = new Jerry();
-        allToms = new ArrayList<Tom>();
-    }
+        allObstacle = new ArrayList<>();
+    };
 
     @Override
     protected void onPause() {
         super.onPause();
-        stopTimer();
+
+        this.thread.interrupt();
+        try {
+            this.thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        this.thread = null ;
+
+        simpleLoc.endUpdates();
     }
 
-    private void stopTimer() {
-        timer.cancel();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.thread = new Thread(runnable);
+        this.thread.run();
+        simpleLoc = initLocation();
+        simpleLoc.beginUpdates();
+
+        String jerryAsJsonStringFromSP = MySP3.getInstance().getString(SP_KEY_JERRY,"");
+        String obsAsJsonStringFromSP = MySP3.getInstance().getString(SP_KEY_OBS,"");
+        Log.d("info", jerryAsJsonStringFromSP);
+        Log.d("info", obsAsJsonStringFromSP);
+        Jerry jerryFromSP = new Gson().fromJson(jerryAsJsonStringFromSP, Jerry.class);
+        Obstacle[] obsFromSP = new Gson().fromJson(obsAsJsonStringFromSP, Obstacle[].class);
+        allObstacle = new ArrayList<>();
+        for (Obstacle ob :obsFromSP
+             ) {
+            allObstacle.add(ob);
+        }
     }
 
     private void findViews() {
@@ -111,7 +144,7 @@ public class GameActivity extends AppCompatActivity {
                 findViewById(R.id.game_IMG_jerryPos4)
         };
 
-        game_IMG_tomPos = new ShapeableImageView[][] {
+        game_IMG_obsPos = new ShapeableImageView[][] {
                 { findViewById(R.id.game_IMG_TomPos00), findViewById(R.id.game_IMG_TomPos01),
                         findViewById(R.id.game_IMG_TomPos02), findViewById(R.id.game_IMG_TomPos03),
                         findViewById(R.id.game_IMG_TomPos04) },
@@ -159,6 +192,64 @@ public class GameActivity extends AppCompatActivity {
 
     }
 
+    private void checkMode(){
+        String mode = lastIntent.getExtras().getString(MODE);
+        if(mode.equalsIgnoreCase("sensors")){
+            game_BTN_left.setVisibility(View.INVISIBLE);
+            game_BTN_right.setVisibility(View.INVISIBLE);
+            tiltDetector.start();
+        }
+        else{
+            game_BTN_left.setVisibility(View.VISIBLE);
+            game_BTN_right.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void checkLevel(){
+        String mode = lastIntent.getExtras().getString(LEVEL);
+        if(mode.equalsIgnoreCase("hard")){
+            delayToChoose = DELAY_HARD;
+        }
+        else{
+            delayToChoose = DELAY_EASY;
+        }
+
+    }
+
+    private void buttons(){ //Activate Buttons
+        game_BTN_left.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moveJerry("left");
+                showRealJerry();
+            }
+        });
+        game_BTN_right.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moveJerry("right");
+                showRealJerry();
+            }
+
+        });
+    }
+
+    private TiltDetector.CallBack_moves callBack_moves = new TiltDetector.CallBack_moves() { //Activate Seneors
+        @Override
+        public void moveLeft() {
+            moveJerry("left");
+            showRealJerry();
+        }
+
+        @Override
+        public void moveRight() {
+            moveJerry("right");
+            showRealJerry();
+        }
+    };
+
+
+
     private void initVisibility() {
         // set Jerry default Visibility
         game_IMG_jerryPos[0].setVisibility(View.INVISIBLE);
@@ -172,10 +263,10 @@ public class GameActivity extends AppCompatActivity {
             game_IMG_hearts[i].setVisibility(View.VISIBLE);
         }
 
-        // set Tom default Visibility
-        for (int i = 0; i < TOM_MATRIX_ROW; i++) {
-            for (int j = 0; j < TOM_MATRIX_COL; j++) {
-                game_IMG_tomPos[i][j].setVisibility(View.INVISIBLE);
+         //set Tom default Visibility
+        for (int i = 0; i < OBS_MATRIX_ROW; i++) {
+            for (int j = 0; j < OBS_MATRIX_COL; j++) {
+                game_IMG_obsPos[i][j].setVisibility(View.INVISIBLE);
             }
         }
 
@@ -208,48 +299,106 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    private void createTom() {
-        Tom tom = new Tom();
-        allToms.add(tom);
+    private void createObs() {
+        for (Obstacle obs :
+                allObstacle) {
+            obs.setNextRow();
+        }
+        Random rand = new Random();
+        int type= rand.nextInt(2);
+        if(type == 0){
+            createTom();
+        }
+        if(type == 1) {
+            createCheese();
+        }
     }
 
-    private void dropTom() {
-        for (int i = 0; i < allToms.size(); i++) {
-            allToms.get(i).setNextRow();
-            if (allToms.get(i).getRow() <= TOM_MATRIX_ROW) {
-                ShowRealTom(allToms.get(i));
-                if (allToms.get(i).getRow() == TOM_MATRIX_ROW) { // Private case "the hit"
-                    checkHit(allToms.get(i));
+    private void createCheese() {
+        Cheese cheese = new Cheese(R.drawable.ic_cheese_48);
+        allObstacle.add(0,cheese);
+    }
+
+    private void createTom() {
+       Tom tom = new Tom(R.drawable.ic_tom);
+       allObstacle.add(0,tom);
+    }
+
+    private void dropObs() {
+        for (int i = 0; i < allObstacle.size(); i++) {
+            if (allObstacle.get(i).getRow() <= OBS_MATRIX_ROW) {
+                if (allObstacle.get(i).getRow() == OBS_MATRIX_ROW) { // Private case "the hit"
+                    checkHit(allObstacle.get(i));
                     if (jerry.getNumOfLife() == 0)
-                        gameOver();     // stop dropping tom because game over
-                    allToms.remove(i);
+                        gameOver();     // stop dropping obs because game over
+                    allObstacle.remove(i);
                     i--;
                 }
             }
         }
     }
 
-    private void ShowRealTom(Tom thisTom) {
-        int rowTom = thisTom.getRow();
-        int colTom = thisTom.getCOL();
-
-        if (rowTom < TOM_MATRIX_ROW) {
-            game_IMG_tomPos[rowTom][colTom].setVisibility(View.VISIBLE);
-            game_IMG_tomPos[rowTom][colTom].setImageResource(R.drawable.ic_tom);
+    private void checkHit(Obstacle obs) {
+        if (obs.getCOL() == jerry.getPos() ) {  // obs catch Jerry
+            if (obs instanceof Tom) {
+                jerry.hitFromTom();
+                toVibrate();
+                updateHearts();
+            }
+            if( obs instanceof Cheese){
+                jerry.setGameScore(jerry.getGameScore()+((Cheese) obs).getScore());
+            }
         }
+    }
+    private void updateHearts() {
+        game_IMG_hearts[jerry.getNumOfLife()].setVisibility(View.INVISIBLE);
+    }
 
-        if (rowTom != 0)
-            game_IMG_tomPos[rowTom-1][colTom].setVisibility(View.INVISIBLE);
+    private void UpdateUi(){
+
+        for(int i= 0; i <OBS_MATRIX_ROW; i++){
+            for(int j=0; j < OBS_MATRIX_COL; j++){
+                if( allObstacle.size() <= i ){
+                    continue;
+                }
+                boolean temp = allObstacle.get(i).getCOL() == j;
+                boolean temp2 = game_IMG_obsPos[i][j].getVisibility() == View.VISIBLE;
+                if((temp) && (!temp2)){
+                    game_IMG_obsPos[i][j].setVisibility(View.VISIBLE);
+                    game_IMG_obsPos[i][j].setImageResource(allObstacle.get(i).getPicId());
+                }
+                if((!temp) && (temp2)){
+                    game_IMG_obsPos[i][j].setVisibility(View.INVISIBLE);
+                }
+
+            }
+        }
+        ((TextView) findViewById(R.id.game_TXT_score)).setText("" + jerry.getGameScore());
 
     }
 
-    private void checkHit(Tom tom) {
+    private SimpleLocation initLocation(){
+        SimpleLocation location = new SimpleLocation(this);
+        if (!location.hasLocationEnabled()) {
+            SimpleLocation.openSettings(this);
+        }
+        return location;
 
-        if (tom.getCOL() == jerry.getPos() ) {  // tom catch Jerry
-                    jerry.hitFromTom();
-                    toVibrate();
-                    updateHearts();
-            }
+    }
+
+    private void gameOver() {
+        Intent lastIntent = getIntent();
+        String playerName = lastIntent.getStringExtra(NAME);
+        Double lan = simpleLoc.getLongitude();
+        Double lat = simpleLoc.getLatitude();
+
+        ArrayList<Player> topPlayers = (ArrayList<Player>) MySP3.getInstance().getAllPlayers();
+        topPlayers.add(new Player(playerName, jerry.getGameScore(),lan,lat));
+        MySP3.getInstance().setAllPlayers(topPlayers);
+//        Log.d( "getAllPlayers: ", MySP3.getInstance().getAllPlayers().toString());
+        Intent myIntent = new Intent(this,EndGameActivity.class);
+        startActivity(myIntent);
+        finish();
     }
 
     private void toVibrate() {
@@ -263,13 +412,6 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    private void updateHearts() {
-        game_IMG_hearts[jerry.getNumOfLife()].setVisibility(View.INVISIBLE);
-    }
-    private void gameOver() {
-        Intent myintent = new Intent(this,EndGameActivity.class);
-        startActivity(myintent);
-        finish();
-    }
+
 
 }
