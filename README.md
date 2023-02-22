@@ -2,7 +2,7 @@
 This is my first android game.
 This is an assignment for introduction to cellular applications.
 
-[Travel Book (1).pdf](https://github.com/NofarShlosberg/TomAndJerryGame/files/10804902/Travel.Book.1.pdf)
+![image](https://user-images.githubusercontent.com/80713297/220656952-d8b3492f-a94c-4ab2-8ea8-8f82f9cd593d.png)
 
 
 This is the video link for my project : https://afekacollege-my.sharepoint.com/:v:/g/personal/nofar_shlosberg_s_afeka_ac_il/EZ6r9iUbZ_1Nt9X5cPZKLwwBdXJvholfAc19jX8KhkwWuw?e=NEDFlH
